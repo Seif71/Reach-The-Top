@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #fafafa;
+  --bg-elev: #ffffff;
+  --bg-soft: #f4f4f5;
+  --line: #e4e4e7;
+  --text: #18181b;
+  --muted: #52525b;
+  --gold: #b91c1c;
+  --gold-2: #991b1b;
+  --danger: #b91c1c;
+  --ok: #15803d;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-elev: var(--bg-elev);
+  --color-soft: var(--bg-soft);
+  --color-line: var(--line);
+  --color-ink: var(--text);
+  --color-muted: var(--muted);
+  --color-gold: var(--gold);
+  --color-gold-2: var(--gold-2);
+  --color-danger: var(--danger);
+  --color-ok: var(--ok);
+  --font-sans: var(--font-sans-loaded);
+  --font-serif: var(--font-sans-loaded);
+}
+
+* {
+  border-color: var(--line);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  line-height: 1.55;
+}
+
+h1,
+h2,
+h3 {
+  color: var(--text);
+  line-height: 1.25;
+}
+
+a {
+  color: inherit;
+}
+
+::selection {
+  background: rgba(185, 28, 28, 0.14);
+}
+
+input,
+textarea,
+select {
+  background: #ffffff;
+  color: var(--text);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(185, 28, 28, 0.22);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #a1a1aa;
+}

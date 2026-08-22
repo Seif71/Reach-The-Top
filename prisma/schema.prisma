@@ -1,0 +1,177 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum AdvertiserStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  REMOVED
+}
+
+enum BidStatus {
+  PENDING_PAYMENT
+  SUCCEEDED
+  FAILED
+  SUPERSEDED
+  REFUNDED
+  CANCELED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+  CANCELED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String?
+  role         UserRole @default(USER)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  advertisers Advertiser[]
+  bids        Bid[]
+  auditLogs   AuditLog[]
+
+  @@index([email])
+}
+
+model Advertiser {
+  id           String            @id @default(cuid())
+  userId       String?
+  user         User?             @relation(fields: [userId], references: [id], onDelete: SetNull)
+  name         String
+  websiteUrl   String
+  description  String
+  category     String
+  logoUrl      String?
+  contactEmail String
+  status       AdvertiserStatus  @default(APPROVED)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  bids              Bid[]
+  winningPositions  WinningPosition[]
+  auctionState      AuctionState?
+
+  @@index([status])
+  @@index([contactEmail])
+  @@index([userId])
+}
+
+model Bid {
+  id                      String    @id @default(cuid())
+  advertiserId            String
+  advertiser              Advertiser @relation(fields: [advertiserId], references: [id], onDelete: Restrict)
+  userId                  String?
+  user                    User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+  amountCents             Int
+  minimumRequiredCents    Int
+  status                  BidStatus  @default(PENDING_PAYMENT)
+  failureReason           String?
+  stripeCheckoutSessionId String?    @unique
+  createdAt               DateTime   @default(now())
+  updatedAt               DateTime   @updatedAt
+
+  payment          Payment?
+  winningPosition  WinningPosition?
+
+  @@index([advertiserId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model Payment {
+  id                      String        @id @default(cuid())
+  bidId                   String        @unique
+  bid                     Bid           @relation(fields: [bidId], references: [id], onDelete: Restrict)
+  amountCents             Int
+  currency                String        @default("usd")
+  status                  PaymentStatus @default(PENDING)
+  stripeCheckoutSessionId String        @unique
+  stripePaymentIntentId   String?
+  stripeCustomerId        String?
+  stripeChargeId          String?
+  stripeRefundId          String?
+  refundedAt              DateTime?
+  failureMessage          String?
+  paidAt                  DateTime?
+  createdAt               DateTime      @default(now())
+  updatedAt               DateTime      @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+model WinningPosition {
+  id           String      @id @default(cuid())
+  advertiserId String
+  advertiser   Advertiser  @relation(fields: [advertiserId], references: [id], onDelete: Restrict)
+  bidId        String      @unique
+  bid          Bid         @relation(fields: [bidId], references: [id], onDelete: Restrict)
+  amountCents  Int
+  startedAt    DateTime    @default(now())
+  endedAt      DateTime?
+
+  @@index([startedAt])
+  @@index([endedAt])
+}
+
+model AuctionState {
+  id                  String      @id @default("global")
+  currentBidCents     Int         @default(0)
+  currentAdvertiserId String?     @unique
+  currentAdvertiser   Advertiser? @relation(fields: [currentAdvertiserId], references: [id], onDelete: SetNull)
+  currentPositionId   String?
+  version             Int         @default(0)
+  updatedAt           DateTime    @updatedAt
+}
+
+model PlatformSettings {
+  id                    String   @id @default("global")
+  startingBidCents      Int      @default(100)
+  minIncrementCents     Int      @default(100)
+  leaderboardLimit      Int      @default(12)
+  requireApproval       Boolean  @default(false)
+  advertisingRules      String   @default("")
+  siteName              String   @default("ReachTheTop")
+  supportEmail          String   @default("hello@example.com")
+  updatedAt             DateTime @updatedAt
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String?
+  actor      User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  action     String
+  entityType String
+  entityId   String?
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+  @@index([action])
+  @@index([createdAt])
+  @@index([entityType, entityId])
+}
+
+model StripeEvent {
+  id          String   @id
+  type        String
+  processedAt DateTime @default(now())
+}
