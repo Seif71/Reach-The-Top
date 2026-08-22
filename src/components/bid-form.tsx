@@ -36,7 +36,7 @@ export function BidForm({ minimumBidCents, currentBidCents, hasWinner, defaultEm
       return `The minimum listing amount is ${formatUsd(minimumBidCents)}.`;
     }
     return null;
-  }, [bidCents, currentBidCents, hasWinner, minimumBidCents, values.bidDollars]);
+  }, [bidCents, minimumBidCents, values.bidDollars]);
 
   async function onUpload(file: File) {
     setUploading(true);

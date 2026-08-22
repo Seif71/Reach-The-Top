@@ -55,7 +55,7 @@ export function Footer({ supportEmail }: { supportEmail: string }) {
       <div className="mx-auto flex max-w-3xl flex-col gap-4 px-5 py-8 text-sm text-muted md:flex-row md:justify-between">
         <p>Advertising placement. Results are not guaranteed.</p>
         <div className="flex flex-wrap gap-x-4 gap-y-2">
-          <a href="/#rules">Rules</a>
+          <Link href="/#rules">Rules</Link>
           <Link href="/terms">Terms</Link>
           <Link href="/privacy">Privacy</Link>
           <Link href="/advertising-policy">Advertising</Link>

@@ -1,4 +1,3 @@
-import type { Advertiser } from "@prisma/client";
 import { formatUsd } from "@/lib/money";
 
 export function formatHost(url: string) {
