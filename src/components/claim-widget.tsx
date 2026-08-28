@@ -38,6 +38,10 @@ export function ClaimWidget({
 
   async function pay(placement: Placement, bidDollars: number) {
     setError(null);
+    if (!paymentsReady) {
+      setError("Stripe is not configured yet.");
+      return;
+    }
     if (!websiteUrl.trim() || !contactEmail.trim()) {
       setError("Enter your URL and email first.");
       return;
@@ -145,9 +149,9 @@ export function ClaimWidget({
           </div>
           <button
             type="button"
-            disabled={Boolean(loading) || !paymentsReady}
+            disabled={loading === "first"}
             onClick={() => pay("first", (firstCents ?? firstMinCents) / 100)}
-            className="mt-10 mt-auto w-full rounded-lg bg-gold py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-gold-2 disabled:cursor-wait disabled:opacity-80"
+            className="mt-10 mt-auto w-full cursor-pointer rounded-lg bg-gold py-3.5 text-sm font-bold text-white shadow-md hover:bg-gold-2 disabled:cursor-wait"
           >
             {loading === "first"
               ? "Opening checkout…"
@@ -190,9 +194,9 @@ export function ClaimWidget({
           </div>
           <button
             type="button"
-            disabled={Boolean(loading) || !paymentsReady}
+            disabled={loading === "list"}
             onClick={() => pay("list", (customCents ?? 0) / 100)}
-            className="mt-10 mt-auto w-full rounded-lg bg-gold py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-gold-2 disabled:cursor-wait disabled:opacity-80"
+            className="mt-10 mt-auto w-full cursor-pointer rounded-lg bg-gold py-3.5 text-sm font-bold text-white shadow-md hover:bg-gold-2 disabled:cursor-wait"
           >
             {loading === "list"
               ? "Opening checkout…"
