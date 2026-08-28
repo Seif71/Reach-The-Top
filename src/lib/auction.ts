@@ -1,6 +1,9 @@
+import type { Advertiser, AuctionState, PlatformSettings } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import type { AuctionSnapshot } from "@/lib/bidding-rules";
 import { minimumValidBidCents } from "@/lib/bidding-rules";
+
+type AuctionStateWithAdvertiser = AuctionState & { currentAdvertiser: Advertiser | null };
 
 const DEFAULT_SETTINGS = {
   id: "global",
@@ -38,37 +41,40 @@ export async function getAuctionSnapshot(): Promise<
     version: number;
   }
 > {
-  const [settings, state] = await Promise.all([
-    getSettings(),
-    prisma.auctionState.findUnique({ where: { id: "global" } }),
-  ]);
+  const settings = await getSettings();
+  try {
+    const state = await prisma.auctionState.findUnique({ where: { id: "global" } });
+    const currentBidCents = state?.currentBidCents ?? 0;
+    const hasWinner = Boolean(state?.currentAdvertiserId) && currentBidCents > 0;
 
-  const currentBidCents = state?.currentBidCents ?? 0;
-  const hasWinner = Boolean(state?.currentAdvertiserId) && currentBidCents > 0;
-
-  return {
-    currentBidCents,
-    hasWinner,
-    startingBidCents: settings.startingBidCents,
-    minIncrementCents: settings.minIncrementCents,
-    currentAdvertiserId: state?.currentAdvertiserId ?? null,
-    version: state?.version ?? 0,
-  };
+    return {
+      currentBidCents,
+      hasWinner,
+      startingBidCents: settings.startingBidCents,
+      minIncrementCents: settings.minIncrementCents,
+      currentAdvertiserId: state?.currentAdvertiserId ?? null,
+      version: state?.version ?? 0,
+    };
+  } catch (error) {
+    console.error("getAuctionSnapshot failed", error);
+    return {
+      currentBidCents: 0,
+      hasWinner: false,
+      startingBidCents: settings.startingBidCents,
+      minIncrementCents: settings.minIncrementCents,
+      currentAdvertiserId: null,
+      version: 0,
+    };
+  }
 }
 
-export async function getLiveAuction() {
-  const [settings, state] = await Promise.all([
-    getSettings(),
-    prisma.auctionState.findUnique({
-      where: { id: "global" },
-      include: {
-        currentAdvertiser: true,
-      },
-    }),
-  ]);
-
+function liveAuctionFrom(
+  settings: PlatformSettings | typeof DEFAULT_SETTINGS,
+  state: AuctionStateWithAdvertiser | null,
+) {
   const currentBidCents = state?.currentBidCents ?? 0;
-  const hasWinner = Boolean(state?.currentAdvertiser) && currentBidCents > 0;
+  const currentAdvertiser = state?.currentAdvertiser ?? null;
+  const hasWinner = Boolean(currentAdvertiser) && currentBidCents > 0;
   const snapshot = {
     currentBidCents,
     hasWinner,
@@ -80,8 +86,24 @@ export async function getLiveAuction() {
     settings,
     state,
     snapshot,
-    currentAdvertiser: state?.currentAdvertiser ?? null,
+    currentAdvertiser,
     minimumBidCents: minimumValidBidCents(snapshot, "list"),
     firstPlaceMinCents: minimumValidBidCents(snapshot, "first"),
   };
+}
+
+export async function getLiveAuction() {
+  const settings = await getSettings();
+  try {
+    const state = await prisma.auctionState.findUnique({
+      where: { id: "global" },
+      include: {
+        currentAdvertiser: true,
+      },
+    });
+    return liveAuctionFrom(settings, state);
+  } catch (error) {
+    console.error("getLiveAuction failed", error);
+    return liveAuctionFrom(settings, null);
+  }
 }

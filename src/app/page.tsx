@@ -26,16 +26,21 @@ export default async function HomePage({
   const { currentAdvertiser, snapshot, firstPlaceMinCents, settings } =
     await getLiveAuction();
 
-  const advertisers = await prisma.advertiser.findMany({
-    where: { status: { not: "REMOVED" } },
-    include: {
-      bids: {
-        where: { status: "SUCCEEDED" },
-        orderBy: { amountCents: "desc" },
-        take: 1,
+  const advertisers = await prisma.advertiser
+    .findMany({
+      where: { status: { not: "REMOVED" } },
+      include: {
+        bids: {
+          where: { status: "SUCCEEDED" },
+          orderBy: { amountCents: "desc" },
+          take: 1,
+        },
       },
-    },
-  });
+    })
+    .catch((error) => {
+      console.error("homepage listings failed", error);
+      return [];
+    });
 
   const ranked = advertisers
     .map((advertiser) => ({
