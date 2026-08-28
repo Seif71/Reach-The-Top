@@ -27,12 +27,6 @@ export function MobileNav({
       {open && (
         <div className="absolute left-0 right-0 top-16 border-b border-line bg-white px-5 py-4">
           <nav className="flex flex-col gap-3 text-sm">
-            <a href="#live" onClick={() => setOpen(false)}>
-              Live
-            </a>
-            <a href="#rankings" onClick={() => setOpen(false)}>
-              Rankings
-            </a>
             <a href="#rules" onClick={() => setOpen(false)}>
               Rules
             </a>

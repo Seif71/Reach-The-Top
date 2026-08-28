@@ -14,12 +14,6 @@ export async function Navbar() {
         </Link>
         <div className="ml-auto flex items-center gap-4">
           <nav className="hidden items-center gap-5 text-sm text-muted md:flex">
-            <Link href="/#live" className="hover:text-ink">
-              Live
-            </Link>
-            <Link href="/#rankings" className="hover:text-ink">
-              Rankings
-            </Link>
             <Link href="/#rules" className="hover:text-ink">
               Rules
             </Link>
