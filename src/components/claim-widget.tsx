@@ -147,7 +147,7 @@ export function ClaimWidget({
             type="button"
             disabled={Boolean(loading) || !paymentsReady}
             onClick={() => pay("first", (firstCents ?? firstMinCents) / 100)}
-            className="mt-10 mt-auto w-full rounded-lg bg-[#5c1010] py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-[#3f0b0b] disabled:cursor-wait disabled:opacity-80"
+            className="mt-10 mt-auto w-full rounded-lg bg-gold py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-gold-2 disabled:cursor-wait disabled:opacity-80"
           >
             {loading === "first"
               ? "Opening checkout…"
@@ -192,7 +192,7 @@ export function ClaimWidget({
             type="button"
             disabled={Boolean(loading) || !paymentsReady}
             onClick={() => pay("list", (customCents ?? 0) / 100)}
-            className="mt-10 mt-auto w-full rounded-lg bg-[#5c1010] py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-[#3f0b0b] disabled:cursor-wait disabled:opacity-80"
+            className="mt-10 mt-auto w-full rounded-lg bg-gold py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-gold-2 disabled:cursor-wait disabled:opacity-80"
           >
             {loading === "list"
               ? "Opening checkout…"
