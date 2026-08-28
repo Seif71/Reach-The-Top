@@ -109,7 +109,7 @@ export function ClaimWidget({
       </div>
 
       <div className="mt-4 grid gap-4 md:grid-cols-2">
-        <div className="flex flex-col rounded-xl border border-line bg-white p-6">
+        <div className="flex min-h-[22rem] flex-col rounded-xl border border-line bg-white p-6">
           <p className="text-center text-xl font-bold tracking-tight">Pay for the #1 spot</p>
           <p className="mt-2 text-center text-sm text-muted">
             {hasWinner
@@ -147,7 +147,7 @@ export function ClaimWidget({
             type="button"
             disabled={Boolean(loading) || !paymentsReady}
             onClick={() => pay("first", (firstCents ?? firstMinCents) / 100)}
-            className="mt-8 w-full rounded-lg bg-gold py-3 text-sm font-medium text-white hover:bg-gold-2 disabled:opacity-60"
+            className="mt-10 mt-auto w-full rounded-lg bg-red-800 py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-red-950 disabled:cursor-wait disabled:opacity-80"
           >
             {loading === "first"
               ? "Opening checkout…"
@@ -155,7 +155,7 @@ export function ClaimWidget({
           </button>
         </div>
 
-        <div id="list-pay" className="flex flex-col rounded-xl border border-line bg-white p-6">
+        <div id="list-pay" className="flex min-h-[22rem] flex-col rounded-xl border border-line bg-white p-6">
           <p className="text-center text-xl font-bold tracking-tight">Pay to be on the rankings</p>
           <p className="mt-2 text-center text-sm text-muted">
             Enter a custom price. Ranked by how much you pay.
@@ -190,9 +190,9 @@ export function ClaimWidget({
           </div>
           <button
             type="button"
-            disabled={Boolean(loading) || !paymentsReady || !customReady}
+            disabled={Boolean(loading) || !paymentsReady}
             onClick={() => pay("list", (customCents ?? 0) / 100)}
-            className="mt-8 w-full rounded-lg bg-gold py-3 text-sm font-medium text-white hover:bg-gold-2 disabled:opacity-60"
+            className="mt-10 mt-auto w-full rounded-lg bg-red-800 py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-red-950 disabled:cursor-wait disabled:opacity-80"
           >
             {loading === "list"
               ? "Opening checkout…"

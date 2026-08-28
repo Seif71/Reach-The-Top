@@ -40,7 +40,7 @@ export async function Navbar() {
             )}
           </nav>
           <MobileNav isLoggedIn={Boolean(session?.user)} isAdmin={session?.user?.role === "ADMIN"} />
-          <a href="#claim" className="rounded-md bg-gold px-3 py-1.5 text-sm font-medium text-white hover:bg-gold-2">
+          <a href="#claim" className="rounded-md bg-red-800 px-3 py-1.5 text-sm font-semibold text-white hover:bg-red-950">
             Get #1
           </a>
         </div>
