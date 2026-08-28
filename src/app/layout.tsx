@@ -3,13 +3,14 @@ import { Geist } from "next/font/google";
 import "./globals.css";
 import { Navbar, Footer } from "@/components/shell";
 import { getSettings } from "@/lib/auction";
+import { getAppUrl } from "@/lib/stripe";
 
 const sans = Geist({
   variable: "--font-sans-loaded",
   subsets: ["latin"],
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+const siteUrl = getAppUrl();
 
 export const dynamic = "force-dynamic";
 

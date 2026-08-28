@@ -39,9 +39,25 @@ export function isPaymentsReady(): boolean {
 }
 
 export function getAppUrl(): string {
-  return (
-    process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ||
-    process.env.AUTH_URL?.replace(/\/$/, "") ||
-    "http://localhost:3000"
-  );
+  const candidates = [
+    process.env.NEXT_PUBLIC_APP_URL,
+    process.env.AUTH_URL,
+    process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL.replace(/^https?:\/\//, "")}`
+      : undefined,
+    process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined,
+    "http://localhost:3000",
+  ];
+
+  for (const raw of candidates) {
+    const value = raw?.trim().replace(/\/$/, "");
+    if (!value) continue;
+    try {
+      return new URL(value.includes("://") ? value : `https://${value}`).origin;
+    } catch {
+      continue;
+    }
+  }
+
+  return "http://localhost:3000";
 }
