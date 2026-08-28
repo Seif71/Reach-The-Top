@@ -113,7 +113,7 @@ export function ClaimWidget({
       </div>
 
       <div className="mt-4 grid gap-4 md:grid-cols-2">
-        <div className="flex min-h-[22rem] flex-col rounded-xl border border-line bg-white p-6">
+        <div className="flex flex-col rounded-xl border border-line bg-white p-6">
           <p className="text-center text-xl font-bold tracking-tight">Pay for the #1 spot</p>
           <p className="mt-2 text-center text-sm text-muted">
             {hasWinner
@@ -151,7 +151,7 @@ export function ClaimWidget({
             type="button"
             disabled={loading === "first"}
             onClick={() => pay("first", (firstCents ?? firstMinCents) / 100)}
-            className="mt-10 mt-auto w-full cursor-pointer rounded-lg bg-gold py-3.5 text-sm font-bold text-white shadow-md hover:bg-gold-2 disabled:cursor-wait"
+            className="mt-6 w-full cursor-pointer rounded-lg bg-gold py-3.5 text-sm font-bold text-white shadow-md hover:bg-gold-2 disabled:cursor-wait"
           >
             {loading === "first"
               ? "Opening checkout…"
@@ -159,7 +159,7 @@ export function ClaimWidget({
           </button>
         </div>
 
-        <div id="list-pay" className="flex min-h-[22rem] flex-col rounded-xl border border-line bg-white p-6">
+        <div id="list-pay" className="flex flex-col rounded-xl border border-line bg-white p-6">
           <p className="text-center text-xl font-bold tracking-tight">Pay to be on the rankings</p>
           <p className="mt-2 text-center text-sm text-muted">
             Enter a custom price. Ranked by how much you pay.
@@ -196,7 +196,7 @@ export function ClaimWidget({
             type="button"
             disabled={loading === "list"}
             onClick={() => pay("list", (customCents ?? 0) / 100)}
-            className="mt-10 mt-auto w-full cursor-pointer rounded-lg bg-gold py-3.5 text-sm font-bold text-white shadow-md hover:bg-gold-2 disabled:cursor-wait"
+            className="mt-6 w-full cursor-pointer rounded-lg bg-gold py-3.5 text-sm font-bold text-white shadow-md hover:bg-gold-2 disabled:cursor-wait"
           >
             {loading === "list"
               ? "Opening checkout…"
