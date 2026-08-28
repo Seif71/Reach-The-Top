@@ -70,13 +70,13 @@ export default async function HomePage({
       {paid === "1" && <PaidBanner />}
       {paid === "stale" && <PaidBanner stale />}
 
-      <section className="px-5 pb-12 pt-20 sm:pt-24">
+      <section className="px-5 pb-12 pt-14 sm:pt-16">
         <h1 className="text-center text-3xl font-semibold tracking-tight">Get seen on the board.</h1>
         <p className="mx-auto mt-3 max-w-xl text-center text-muted">
           Pay for the #1 spot, or pay to appear on the live rankings. Highest payment still holds
           #1.
         </p>
-        <div className="mt-12">
+        <div className="mt-8">
           <ClaimWidget
             firstMinCents={firstPlaceMinCents}
             currentBidCents={snapshot.currentBidCents}
